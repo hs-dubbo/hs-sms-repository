@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true">
+	<!-- 设置上下文名称 -->
+    <contextName>hoomsun-sms</contextName>  
+    <!-- 设置变量 -->	
+    <property name="USERHOME" value="/sms/logs" />
+    <property name="PORT" value="80" />
+    <property name="MODULENAME" value="hoomsun-sms-server" />
+    
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> 
+    	<!-- encoder 默认配置为PatternLayoutEncoder -->
+	    <encoder>   
+	      	<pattern>%d{yyyyMMdd HH:mm:ss SSS}[%thread][%level]-%msg%n</pattern>   
+	    </encoder>   
+    </appender>
+    
+    <!-- debug 开发使用 -->  
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${USERHOME}/${MODULENAME}/${MODULENAME}_${PORT}_debug.log</File>   
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        	<fileNamePattern>${USERHOME}/${MODULENAME}/zip/${MODULENAME}_${PORT}_%d{yyyyMMdd}_debug_%i.zip</fileNamePattern>
+        	<maxHistory>90</maxHistory>
+        	
+        	<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+		    	<MaxFileSize>512MB</MaxFileSize>
+		    </TimeBasedFileNamingAndTriggeringPolicy>  
+        </rollingPolicy>
+        <layout>
+            <Pattern>%d{yyyyMMdd HH:mm:ss SSS}[%thread][%level]-%msg%n</Pattern>
+        </layout>
+    </appender>
+   
+    <!-- =========================================公用配置Start=============================== -->
+      <appender name="MODULENAME-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+       	 <File>${USERHOME}/${MODULENAME}/${MODULENAME}_${PORT}_info.log</File>
+        <!-- <filter class="ch.qos.logback.classic.filter.LevelFilter"> -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+             <!-- 过滤掉非INFO级别 -->
+             <level>INFO</level>
+             <onMatch>ACCEPT</onMatch>
+             <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        	<fileNamePattern>${USERHOME}/${MODULENAME}/zip/${MODULENAME}_${PORT}_%d{yyyyMMdd}_info_%i.zip</fileNamePattern>
+        	<maxHistory>90</maxHistory>
+        	
+        	<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+		    	<MaxFileSize>512MB</MaxFileSize>
+		    </TimeBasedFileNamingAndTriggeringPolicy>  
+        </rollingPolicy>
+        <layout>
+            <Pattern>%d{yyyyMMdd HH:mm:ss SSS}[%thread][%level]-%msg%n</Pattern>
+        </layout>
+    </appender>
+    
+    
+    <appender name="MODULENAME-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${USERHOME}/${MODULENAME}/${MODULENAME}_${PORT}_error.log</File>
+        <!-- <filter class="ch.qos.logback.classic.filter.LevelFilter"> -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+             <!-- 过滤掉非ERROR级别 -->
+             <level>ERROR</level>
+             <onMatch>ACCEPT</onMatch>
+             <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        	<fileNamePattern>${USERHOME}/${MODULENAME}/zip/${MODULENAME}_${PORT}_%d{yyyyMMdd}_error_%i.zip</fileNamePattern>
+        	<maxHistory>90</maxHistory>
+        	<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+		    	<MaxFileSize>512MB</MaxFileSize>
+		    </TimeBasedFileNamingAndTriggeringPolicy>  
+        </rollingPolicy>
+        <layout>
+            <Pattern>%d{yyyyMMdd HH:mm:ss SSS} [%thread][%level]-%msg%n</Pattern>
+        </layout>
+    </appender>
+  	<!-- =================================公用配置End=============================== -->
+    <root level="DEBUG">
+	    <appender-ref ref="STDOUT"/>
+	    <appender-ref ref="DEBUG"/>
+    	<appender-ref ref="MODULENAME-ERROR"/>
+    	<appender-ref ref="MODULENAME-INFO"/>
+    </root>
+</configuration>
+

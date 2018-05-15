@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="package" name="hoomsun-sms-common">
+<!--
+====================================================================== 
+project		    :	hoomsun-sms-common
+description	:	短信/邮件服务
+======================================================================
+-->
+
+	<property environment="env" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.6" />
+	<property name="source" value="1.6" />
+	<property name="version" value="0.0.1-SNAPSHOT" />
+	<property name="vendor" value="hoomsun" />
+	<property name="author" value="hoomsun" />
+	<property name="project" value="hoomsun-agre-common" />
+	
+    <tstamp>
+        <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
+    </tstamp>
+
+	<!-- 默认当前目录为.即build.xml所在目录，所有其它目录都基于此 -->
+	<property name="common.home" value="."/>
+	<!-- Java源文件路径，该目录下存放Java源文件 -->
+	<property name="common.src.home" location="${common.home}/src/com" />
+	<property name="common.dist.home" location="${common.home}/dist" />
+	<property name="common.lib.home" location="${common.home}/lib" />
+	
+	<!--
+	<property name="common.resource.home" location="${common.home}/src/main/resources" />
+	
+	-->
+	
+	<path id="common-classpath">
+		<fileset dir="${common.lib.home}" includes="**/*.jar" />
+	</path>
+
+	<target name="common-init">
+		<delete dir="${common.dist.home}/classes" />
+		<mkdir dir="${common.dist.home}/classes" />
+		<copy includeemptydirs="false" todir="${common.dist.home}/classes">
+			<fileset dir="${common.src.home}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- 执行编译 -->
+	<target name="common-build-project" depends="common-init">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac srcdir="${common.src.home}" destdir="${common.dist.home}/classes" debug="${debuglevel}" encoding="GBK" includes="**/*.java" source="${source}" target="${target}" includeantruntime="on">
+			<compilerarg line="-Xlint:unchecked " />
+			<compilerarg line="-Xlint:deprecation" />
+			<classpath refid="common-classpath" />
+		</javac>
+	</target>
+	
+	<!-- 执行打包jar -->
+    <target name="package" depends="common-build-project"  >
+        <manifest file="MANIFEST.MF">
+            <attribute name="Created-By" value="${author}"/>
+            <attribute name="Built-Date" value="${TODAY}"/>
+            <attribute name="Implementation-Title" value="${project}"/>
+            <attribute name="Implementation-Version" value="${version}"/>
+            <attribute name="Implementation-Vendor" value="${vendor}"/>
+        </manifest>
+        <!-- 打包所有的编译文件 -->
+        <jar jarfile="${common.dist.home}/lib/${project}.jar" basedir="${common.dist.home}/classes" manifest="MANIFEST.MF">
+        </jar>
+        <delete dir="${common.dist.home}/classes" />
+		<delete file="${common.home}/MANIFEST.MF" />
+ 		<echo message="${basedir}"/>
+    </target>
+</project>
